@@ -1,0 +1,1 @@
+& C:/Users/Lenovo/AppData/Local/Programs/Python/Python313/python.exe c:/Users/Lenovo/Python/ChatBot/reportazh.py
