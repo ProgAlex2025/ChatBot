@@ -92,8 +92,9 @@ def come(message):
    bot.send_message(chat_id = id, text=txt)
 
 while True == True:
-   sleep(800)
+   time.sleep(800)
    k += 1
 
 bot.polling(non_stop=True)
+
 
