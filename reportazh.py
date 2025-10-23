@@ -1,12 +1,15 @@
 import requests
+import time
 from telebot import TeleBot
- 
+
+
 token = '7353840144:AAFVAHgDOVlJ7UMoHmywROb0u6KuG8vAD6Q'
 bot = TeleBot(token)
 chat_id = '-1002535850677'
 from_chat_id = '7353840144'
 say = ''
 ans = ''
+k = 0
 
 @bot.message_handler(commands=["start"])
 def start_message(message):
@@ -87,5 +90,9 @@ def comes(message):
 def come(message):
    txt = 'Создатель отвечает: ' + message.text
    bot.send_message(chat_id = id, text=txt)
-  
+
+while true:
+   sleep(800)
+   k += 1
+
 bot.polling(non_stop=True)
