@@ -1,6 +1,7 @@
 import requests
 import os
 from telebot import TeleBot
+from http.server import HTTPServer, BaseHTTPRequestHandler
 
 port = int(os.environ.get("PORT", 8000))
 token = '7353840144:AAFVAHgDOVlJ7UMoHmywROb0u6KuG8vAD6Q'
@@ -91,7 +92,14 @@ def come(message):
    txt = 'Создатель отвечает: ' + message.text
    bot.send_message(chat_id = id, text=txt)
 
-bot.polling(non_stop=True)
+class Handler(BaseHTTPRequestHandler):
+    def do_GET(self):
+        self.send_response(200)
+        self.end_headers()
+
+server = HTTPServer(('0.0.0.0', port), Handler)
+server.serve_forever()
+
 
 
 
