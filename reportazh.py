@@ -1,8 +1,8 @@
 import requests
-import time
+import os
 from telebot import TeleBot
 
-
+port = int(os.environ.get("PORT", 8000))
 token = '7353840144:AAFVAHgDOVlJ7UMoHmywROb0u6KuG8vAD6Q'
 bot = TeleBot(token)
 chat_id = '-1002535850677'
@@ -96,6 +96,7 @@ while True == True:
    k += 1
 
 bot.polling(non_stop=True)
+
 
 
 
