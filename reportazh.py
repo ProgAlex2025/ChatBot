@@ -2,6 +2,7 @@ import requests
 import os
 from telebot import TeleBot
 from http.server import HTTPServer, BaseHTTPRequestHandler
+import threading
 
 port = int(os.environ.get("PORT", 8000))
 token = '7353840144:AAFVAHgDOVlJ7UMoHmywROb0u6KuG8vAD6Q'
@@ -110,6 +111,7 @@ threading.Thread(target=run_server, daemon=True).start()
 
 while True:
     pass
+
 
 
 
