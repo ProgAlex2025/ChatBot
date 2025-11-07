@@ -96,7 +96,20 @@ class Handler(BaseHTTPRequestHandler):
     def do_GET(self):
         self.send_response(200)
         self.end_headers()
-       
-bot.polling(non_stop=True)
+
 server = HTTPServer(('0.0.0.0', port), Handler)
-server.serve_forever()
+
+def run_polling():
+    bot.polling(non_stop=True)
+
+def run_server():
+    server.serve_forever()
+
+threading.Thread(target=run_polling, daemon=True).start()
+threading.Thread(target=run_server, daemon=True).start()
+
+while True:
+    pass
+
+
+
