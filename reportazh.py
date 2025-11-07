@@ -99,6 +99,7 @@ class Handler(BaseHTTPRequestHandler):
 
 server = HTTPServer(('0.0.0.0', port), Handler)
 server.serve_forever()
+bot.polling(non_stop=True)
 
 
 
