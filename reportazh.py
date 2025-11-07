@@ -96,13 +96,7 @@ class Handler(BaseHTTPRequestHandler):
     def do_GET(self):
         self.send_response(200)
         self.end_headers()
-
+       
+bot.polling(non_stop=True)
 server = HTTPServer(('0.0.0.0', port), Handler)
 server.serve_forever()
-bot.polling(non_stop=True)
-
-
-
-
-
-
