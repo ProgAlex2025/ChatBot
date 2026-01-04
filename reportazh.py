@@ -1,102 +1,111 @@
-import requests
 import os
 from telebot import TeleBot
-from http.server import HTTPServer, BaseHTTPRequestHandler
 
-port = int(os.environ.get("PORT", 8000))
-token = '7353840144:AAFVAHgDOVlJ7UMoHmywROb0u6KuG8vAD6Q'
+# ТОКЕН БЕРЁТСЯ ИЗ ПЕРЕМЕННЫХ ОКРУЖЕНИЯ
+token = os.environ.get("BOT_TOKEN")
 bot = TeleBot(token)
+
 chat_id = '-1002535850677'
-from_chat_id = '7353840144'
+
 say = ''
 ans = ''
-k = 0
 
 @bot.message_handler(commands=["start"])
 def start_message(message):
-   bot.send_sticker(message.chat.id, "CAACAgIAAxkBAAEO04FoY_Obj4K5W6jkcmdW7nebtJPqdwAC1RoAAhbmYUuVzr2lqcjHbDYE")
-   bot.send_message(chat_id = message.chat.id, text = "Привет, я принимаю ответы на разные вопросы). Если нужна какя-то помощь, используйте команду help. узнать вопрос - question, а ответить - answer или chekc_ans. Не забывайте ставить слеш перед командой)")
- 
+    bot.send_sticker(
+        message.chat.id,
+        "CAACAgIAAxkBAAEO04FoY_Obj4K5W6jkcmdW7nebtJPqdwAC1RoAAhbmYUuVzr2lqcjHbDYE"
+    )
+    bot.send_message(
+        chat_id=message.chat.id,
+        text="Привет, я принимаю ответы на разные вопросы). "
+             "Если нужна помощь — /help. "
+             "Узнать вопрос — /question, "
+             "ответить — /answer или /check_ans."
+    )
+
 @bot.message_handler(commands=["help"])
 def help(message):
-    bot.send_message(chat_id = message.chat.id, text = '''Вам нужна помощь или не помните команды? Значит, вам сюда!
-                     /question - узнать вопрос 
-                     /answer - ответить на вопрос без проверки и отправке лично мне
-                     /check_ans - ответить на вопрос с проверкой (расширенные вопросы на подумать на эту команду не распространяются)
-                     Это пока все, но будут обновления и новые функции)''')
+    bot.send_message(
+        chat_id=message.chat.id,
+        text=(
+            "/question — узнать вопрос\n"
+            "/answer — ответить без проверки\n"
+            "/check_ans — ответить с проверкой\n"
+        )
+    )
 
 @bot.message_handler(commands=["kreker"])
 def question_special(message):
-    msg = bot.send_message(chat_id = message.chat.id, text = "Пиши вопрос, я готов)")
+    msg = bot.send_message(message.chat.id, "Пиши вопрос, я готов)")
     bot.register_next_step_handler(msg, qwerty)
-def qwerty(message): 
-   global say   
-   say = message.text
-   rtxt = 'Ваш вопрос был принят: ' + say
-   bot.send_message(chat_id = message.chat.id, text = rtxt)
-   
+
+def qwerty(message):
+    global say
+    say = message.text
+    bot.send_message(message.chat.id, f"Ваш вопрос был принят: {say}")
+
 @bot.message_handler(commands=["saturn"])
 def answer_special(message):
-    msg = bot.send_message(chat_id = message.chat.id, text = "Пиши ответ, я готов)")
+    msg = bot.send_message(message.chat.id, "Пиши ответ, я готов)")
     bot.register_next_step_handler(msg, wasd)
-def wasd(message):    
-   global ans
-   ans = message.text
-   rtxt = 'Ваш ответ был принят: ' + ans
-   bot.send_message(chat_id = message.chat.id, text = rtxt)   
-   
+
+def wasd(message):
+    global ans
+    ans = message.text
+    bot.send_message(message.chat.id, f"Ваш ответ был принят: {ans}")
+
 @bot.message_handler(commands=["question"])
 def question(message):
-    txt = '''Уже готов к вопросу? Тогда лови! 
-    -----------------------------------------
-    ''' + say + '''
-    -----------------------------------------'''
-    bot.send_message(chat_id = message.chat.id, text = txt)
+    bot.send_message(
+        message.chat.id,
+        f"Уже готов к вопросу?\n"
+        f"----------------------\n"
+        f"{say}\n"
+        f"----------------------"
+    )
 
- 
 @bot.message_handler(commands=['answer'])
 def text_message(message):
-   bot.send_sticker(message.chat.id, "CAACAgIAAxkBAAEO03toY9-MObX5jHq-42ux2oxM41Lr5AAC2S0AArLh2Ul_cy4QprS86jYE")
-   msg = bot.send_message(message.chat.id, 'Ваш итоговый ответ?')
-   bot.register_next_step_handler(msg, answer)   
+    bot.send_sticker(
+        message.chat.id,
+        "CAACAgIAAxkBAAEO03toY9-MObX5jHq-42ux2oxM41Lr5AAC2S0AArLh2Ul_cy4QprS86jYE"
+    )
+    msg = bot.send_message(message.chat.id, "Ваш итоговый ответ?")
+    bot.register_next_step_handler(msg, answer)
+
 def answer(message):
-   bot.send_message(chat_id, message.from_user.id)
-   bot.forward_message(chat_id, message.chat.id, message.message_id)
-   bot.send_message(message.chat.id, 'Ответ отправлен)')
-   
+    bot.send_message(chat_id, str(message.from_user.id))
+    bot.forward_message(chat_id, message.chat.id, message.message_id)
+    bot.send_message(message.chat.id, "Ответ отправлен)")
+
 @bot.message_handler(commands=['check_ans'])
 def answer_big(message):
-   bot.send_sticker(message.chat.id, "CAACAgIAAxkBAAEO03toY9-MObX5jHq-42ux2oxM41Lr5AAC2S0AArLh2Ul_cy4QprS86jYE")
-   msg = bot.send_message(message.chat.id, 'Ваш итоговый ответ?')
-   bot.register_next_step_handler(msg, answer_check)
+    msg = bot.send_message(message.chat.id, "Ваш итоговый ответ?")
+    bot.register_next_step_handler(msg, answer_check)
+
 def answer_check(message):
-   bot.send_message(chat_id, message.from_user.id)
-   bot.forward_message(chat_id, message.chat.id, message.message_id)
-   if message.text == ans:
-      bot.send_message(message.chat.id, 'Молодец, твой ответ правильный!')
-   elif message.text != ans:
-      bot.send_message(message.chat.id, 'Неверно, подумай еще...')
+    bot.send_message(chat_id, str(message.from_user.id))
+    bot.forward_message(chat_id, message.chat.id, message.message_id)
+
+    if message.text == ans:
+        bot.send_message(message.chat.id, "Молодец, твой ответ правильный!")
+    else:
+        bot.send_message(message.chat.id, "Неверно, подумай еще...")
 
 @bot.message_handler(commands=["rat"])
 def comeback(message):
-   txt = 'Кому хочешь ответить?'
-   msg = bot.send_message(chat_id = message.chat.id, text = txt)
-   bot.register_next_step_handler(msg, comes)
+    msg = bot.send_message(message.chat.id, "Кому хочешь ответить?")
+    bot.register_next_step_handler(msg, comes)
+
 def comes(message):
-   txt = 'Что хочешь ответить?'
-   global id
-   id = message.text
-   msg = bot.send_message(chat_id = message.chat.id, text = txt)
-   bot.register_next_step_handler(msg, come)
+    global target_chat_id
+    target_chat_id = message.text
+    msg = bot.send_message(message.chat.id, "Что хочешь ответить?")
+    bot.register_next_step_handler(msg, come)
+
 def come(message):
-   txt = 'Создатель отвечает: ' + message.text
-   bot.send_message(chat_id = id, text=txt)
+    bot.send_message(target_chat_id, f"Создатель отвечает: {message.text}")
 
-class Handler(BaseHTTPRequestHandler):
-    def do_GET(self):
-        self.send_response(200)
-        self.end_headers()
-
-server = HTTPServer(('0.0.0.0', port), Handler)
-server.serve_forever()
-bot.polling(non_stop=True)
+if __name__ == "__main__":
+    bot.infinity_polling()
