@@ -2,7 +2,6 @@ import requests
 import os
 from telebot import TeleBot
 from http.server import HTTPServer, BaseHTTPRequestHandler
-import threading
 
 port = int(os.environ.get("PORT", 8000))
 token = '7353840144:AAFVAHgDOVlJ7UMoHmywROb0u6KuG8vAD6Q'
@@ -99,19 +98,5 @@ class Handler(BaseHTTPRequestHandler):
         self.end_headers()
 
 server = HTTPServer(('0.0.0.0', port), Handler)
-
-def run_polling():
-    bot.polling(non_stop=True)
-
-def run_server():
-    server.serve_forever()
-
-threading.Thread(target=run_polling, daemon=True).start()
-threading.Thread(target=run_server, daemon=True).start()
-
-while True:
-    pass
-
-
-
-
+server.serve_forever()
+bot.polling(non_stop=True)
