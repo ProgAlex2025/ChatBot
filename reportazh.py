@@ -1,5 +1,7 @@
 import os
 from telebot import TeleBot
+from http.server import HTTPServer, BaseHTTPRequestHandler
+import threading
 
 # ТОКЕН БЕРЁТСЯ ИЗ ПЕРЕМЕННЫХ ОКРУЖЕНИЯ
 token = os.environ.get("BOT_TOKEN")
@@ -106,6 +108,19 @@ def comes(message):
 
 def come(message):
     bot.send_message(target_chat_id, f"Создатель отвечает: {message.text}")
+
+class Handler(BaseHTTPRequestHandler):
+    def do_GET(self):
+        self.send_response(200)
+        self.end_headers()
+        self.wfile.write(b'OK')
+
+def run_server():
+    port = int(os.environ.get("PORT", 10000))
+    server = HTTPServer(("0.0.0.0", port), Handler)
+    server.serve_forever()
+
+threading.Thread(target=run_server, daemon=True).start()
 
 if __name__ == "__main__":
     bot.infinity_polling()
