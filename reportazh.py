@@ -1,5 +1,5 @@
 import os
-import threading
+from telebot import TeleBot
 
 token = os.environ.get("BOT_TOKEN")
 bot = TeleBot(token)
@@ -108,3 +108,4 @@ def come(message):
 
 if __name__ == "__main__":
     bot.infinity_polling()
+
