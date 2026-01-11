@@ -5,6 +5,7 @@ import json
 
 token = os.environ.get("BOT_TOKEN")
 bot = TeleBot(token)
+WEBHOOK_URL = os.environ["WEBHOOK_URL"]
 
 chat_id = '-1002535850677'
 
@@ -132,3 +133,4 @@ def run():
 if __name__ == "__main__":
     import telebot
     run()
+
