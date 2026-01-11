@@ -1,5 +1,7 @@
 import os
 from telebot import TeleBot
+from http.server import HTTPServer, BaseHTTPRequestHandler
+import json
 
 token = os.environ.get("BOT_TOKEN")
 bot = TeleBot(token)
@@ -106,6 +108,27 @@ def comes(message):
 def come(message):
     bot.send_message(target_chat_id, f"Создатель отвечает: {message.text}")
 
-if __name__ == "__main__":
-    bot.infinity_polling()
+class WebhookHandler(BaseHTTPRequestHandler):
+    def do_POST(self):
+        length = int(self.headers.get('content-length'))
+        data = self.rfile.read(length)
+        update = json.loads(data.decode('utf-8'))
+        bot.process_new_updates([telebot.types.Update.de_json(update)])
+        self.send_response(200)
+        self.end_headers()
 
+    def do_GET(self):
+        self.send_response(200)
+        self.end_headers()
+        self.wfile.write(b"OK")
+
+def run():
+    bot.remove_webhook()
+    bot.set_webhook(url=WEBHOOK_URL)
+    port = int(os.environ.get("PORT", 10000))
+    server = HTTPServer(("0.0.0.0", port), WebhookHandler)
+    server.serve_forever()
+
+if __name__ == "__main__":
+    import telebot
+    run()
