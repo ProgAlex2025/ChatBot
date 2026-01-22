@@ -5,12 +5,13 @@ import json
 
 token = os.environ.get("BOT_TOKEN")
 bot = TeleBot(token)
-WEBHOOK_URL = os.environ["WEBHOOK_URL"]
 
 chat_id = '-1002535850677'
 
-say = ''
-ans = ''
+def load_question():
+    with open("question.json", "r", encoding="utf-8") as f:
+        data = json.load(f)
+    return data["say"], data["ans"]
 
 @bot.message_handler(commands=["start"])
 def start_message(message):
@@ -59,6 +60,7 @@ def wasd(message):
 
 @bot.message_handler(commands=["question"])
 def question(message):
+    say, ans = load_question()
     bot.send_message(
         message.chat.id,
         f"Уже готов к вопросу?\n"
@@ -89,7 +91,7 @@ def answer_big(message):
 def answer_check(message):
     bot.send_message(chat_id, str(message.from_user.id))
     bot.forward_message(chat_id, message.chat.id, message.message_id)
-
+    say, ans = load_question()
     if message.text == ans:
         bot.send_message(message.chat.id, "Молодец, твой ответ правильный!")
     else:
@@ -133,4 +135,3 @@ def run():
 if __name__ == "__main__":
     import telebot
     run()
-
