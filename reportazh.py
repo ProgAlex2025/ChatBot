@@ -1,9 +1,9 @@
 import os
-import telebot
 from telebot import Telebot
 from http.server import HTTPServer, BaseHTTPRequestHandler
 import json
 
+WEBHOOK_URL = os.environ.get("WEBHOOK_URL")
 token = os.environ.get("BOT_TOKEN")
 bot = TeleBot(token)
 
@@ -134,6 +134,5 @@ def run():
     server.serve_forever()
 
 if __name__ == "__main__":
+    import telebot
     run()
-
-
