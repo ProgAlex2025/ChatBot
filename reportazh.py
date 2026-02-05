@@ -1,5 +1,5 @@
 import os
-from telebot import TeleBot
+import telebot
 from http.server import HTTPServer, BaseHTTPRequestHandler
 import json
 
@@ -133,5 +133,5 @@ def run():
     server.serve_forever()
 
 if __name__ == "__main__":
-    import telebot
     run()
+
